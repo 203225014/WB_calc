@@ -18,6 +18,7 @@ models.Base.metadata.create_all(bind=engine)
 # Serve frontend static files (React build). Ensure Dockerfile copies frontend/build -> /app/frontend/build
 app = FastAPI(title="WB Unit Calculator API")
 # Serve frontend from final image path
+app.mount("/", StaticFiles(directory="/app/frontend/build", html=True), name="frontend")
 
 # Add CORS middleware
 app.add_middleware(
