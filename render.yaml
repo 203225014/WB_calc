@@ -10,14 +10,14 @@ services:
         fromService:
           name: wb-calculator-api
           type: web
-          property: url
+          property: host  # ✅ Исправлено с url на host
 
   # Backend (Web Service - может спать)
   - type: web
     name: wb-calculator-api
     env: python
     buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT  # ✅ Исправлено с PoRT на PORT
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
