@@ -1,5 +1,23 @@
 services:
-  # Frontend (Static Site - не спит!)
+  # Backend API service
+  - type: web
+    name: wb-calculator-api
+    env: python
+    buildCommand: ./build.sh
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: wb-calculator-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.11.0
+
+  # Frontend static site
   - type: web
     name: wb-calculator-frontend
     env: static
@@ -10,14 +28,9 @@ services:
         fromService:
           name: wb-calculator-api
           type: web
-          property: host  # ✅ Исправлено с url на host
+          property: url
 
-  # Backend (Web Service - может спать)
-  - type: web
-    name: wb-calculator-api
-    env: python
-    buildCommand: cd backend && pip install -r requirements.txt
-    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT  # ✅ Исправлено с PoRT на PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
+databases:
+  - name: wb-calculator-db
+    databaseName: wb_calculator
+    plan: free
